@@ -1,0 +1,54 @@
+pomysly:
+- stefania -- pomagala jak mogla
+
+
+267 -- "Stefcia - pomagala jak potrafila"
+268 -- byla dziewczynka czerwony kapturek
+269 -- kapturek z mama spotkanie
+ -- spotkanie z wilkiem (gdzioe idziesz itp)
+808 -- kapturek puka do drzwi babci
+ -- wilk idzie , zjada babcie i kapturka
+
+
+807 - Kapturek idzie przez miasteczo
+809 - Kapturek wilka pyta czemu on ma takie wielkie zeby
+808 - pukanie do domki babci
+811 - w domku babci
+810 -- leaca bacia (7s)
+813,815,841 -- spotkanie wilka z kapturkiem
+814,828,829,830  -- ksiaze kontra wilk
+816,817,822,837,842 -- wilk puka do domku babci
+818,823,831,838 -- wilk pozera babcie
+819,826,839,843 -- ksiaz patrzy ze otwarte drzwi
+820,840 -- ksize atakuje wilka
+821,834,836 -- wilk spotyka kapturka
+827 -- ksiaze aptrzy do kamery
+
+
+-koncpecyjnie to bedzie wprowadzanie bohaterow poprzez zatrzymanie ujecia i napis np. wilk
+- pierwsza scena to kapturke sie obraca w storne ekranu i siep ojawia napis czerwony kapturek -- done
+- Jak spotyka wilka to moze beda zdjecia na twarz tygryska z odleglosci i coraz blizej
+
+1. Intro.mkv (usunac czarna kreske)
+3. Mama odprawia kapturka by babci zaniosl koszyk z zarciem (doszlifowc kluczowane maska)
+4. spotkanie z wilkiem (wilk statyczny)
+5. Wilk puka do drzwi i pozera babcie
+6. Kapturek przychodzi do babci i zostaje pozarty (Krecimy)
+7. mysliwy ratuje kapturak i babcie
+
+Nasepne kroki:
+2) Kapturek i wilk ida do domku babciida do domu babci (nagrac na green screeneie)
+3) Spotkanie z wilkiem (kapturek i wilk na jedynym planie)
+    - Poprawic kluczowanie spotkania z wilkiem
+    - po tym jak kapturek odskakuje to wilk ujecia z przyblizeniem beda 
+    - podchodzenie do wilka z tego jak do domu idzie kapturek
+  
+    - pracuje nad morphem miedzy zdjecami
+
+
+TODO:
+-   przyspieszyc pojawianie sie tytulu
+-   zrobic opis mamy czaerwonego kapturka i ze sa w domu
+-   nagrac dzwiek
+-   dorysowac w domu kosz z owocami
+-   nagrac dzwiek jak na maszynie ktos pisze
