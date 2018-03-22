@@ -1,0 +1,155 @@
+%& --translate-file il2-t1
+\documentclass[a4paper,10pt]{article}
+%\usepackage[polish]{babel}
+%\usepackage{polski}
+\usepackage{makeidx}
+%\usepackage[utf-8]{inputenc}
+%\usepackage[T1]{fontenc}
+\usepackage[a4paper,left=2.5cm,right=2.0cm,top=1.5cm,bottom=1.5cm]{geometry}
+% Title Page
+\title{Notatki dotyczace prob robienia filmow}
+\author{Jacek Czaja}
+\makeindex
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\section{Plan dzialan}
+\begin{enumerate}
+\item Tutorial/screecast o image morphing
+\item Obejrzec tutoriale (VSE, NOD editor)
+\end{enumerate}
+
+
+\section{Technologia}
+\subsection{Sekwencja klatek}
+Zrzucamy zdjecia, najlepiej jak sa ponumerowane. Przykladowa linia polecen by zlozyc je w film (codec x264):
+\begin{verbatim}
+ffmpeg -start_number 334 -i DSC00%d.JPG  -map 0 -c:v libx264 -c:a copy tiger.mp4
+\end{verbatim}
+
+\subsection{Spowolnienie filmu}
+efekt "slow motion" mozna uzyskac za pomoca oprogramowania slowmoVideo.
+Os Y to jest odtwarzanie wejsciowego filmu , a krzywa ktora ustalamy mapuje Y na X gdzie X to
+odtwarzanie wyjsciowego obrazu.\\
+Shutter function to jest okreslenie jka duzo blura nalezy zrobic to jest symulacja czasu naswietlania. 
+
+\subsection{Podglad strumienia z gopro}
+Przy kolejnym wlaczeniu podlgadu, moze zajac troche czasu zanim sie obraz pojawi
+\begin{verbatim}
+mplayer ffmpeg://http://10.5.5.9:8080/live/amba.m3u8
+\end{verbatim}
+
+\subsection{Miecz swietlny}
+Komenda by skryptem colorglow zrobic miecz switlny:
+\begin{verbatim}
+-c "133,78" -s 100 -e 8 -f 20 -h -20
+\end{verbatim}
+
+\subsection{Rysowanie po ekranie}
+\begin{enumerate}
+\item Rozbic film na dwie czesci
+\item wyciagnac klatke na ktorej bedziemy rysowac
+\item Uzywajac gimpa narysowac malunek
+\item Robic undo i kazdy przejsciowy obrazek zapisac
+\item zlozyc obrazki razem z dwoma czesciami filmu uzywajac blendra 
+\end{enumerate}
+\subsubsection{Bezstratne przekodowanie filmu}
+\begin{verbatim}
+ffmpeg -i 00000.MTS -vf scale=1280:800 -c:v libx264 -preset ultrafast -qp 0 -c:a copy output_fast.mkv
+\end{verbatim}
+
+\subsubsection{Najazd kamery na obrazek}
+Pojedyncze zdjecie badz sekwencje zdjec wczytac do blendera (plugin image as a plane). Nastepnie Import->Image as Plane
+Ustawic kamere w pozycji poczatkowej i nastepnie w koncowej (zmieniajac klatke z pierwszej na ostatnia).
+W ustawieniach obiektu (kemery) mozna klawiszem "i" zapamietac lokalizacje kamery tzn zapamietac w pierwzej klatce poczatkowa
+i w ostatniej klatce koncowa (ewentaulnie jakies posrednie tez. 
+Oswietlenie nalezy ustawic w world (ambient occlusion).
+
+\subsubsection{Renderowanie animacji w blenderze z linii polecen}
+\begin{verbatim}
+~/blender-2.76b-linux-glibc211-x86_64/blender -b miasteczko-keying.blend -a
+\end{verbatim}
+
+\subsection{Green screen}
+\begin{itemize}
+\item Keying node posiada przylacze: core oraz garbage, pozwala podlaczyc maske ktore
+Kluczowanie mozna robic w blenderze. 
+\item Tworzymy maske i dodajemy wierzcholki a pozniej "i" zeby dodac klatki kluczowe  
+\item Maske mozna zrobic odbic lustrzanie za pomoc flip node
+\item Keying node sluzy do kluczowania po kolarze
+\end{itemize}
+
+
+\subsubsection{Zasady dobrego greenscreena}
+\begin{itemize}
+\item Zachowac odleglosc obiektu kluczowanego od green screena by nie bylo cienii
+\item Oswietlenie bialy jednorodne (swiatlo dzienne alebo biale oswietlenie z lamp)  
+\item Bez zagniecen materialu
+\end{itemize}
+
+\subsubsection{Wyciagniecie jednej klatki z danego momentu}
+\begin{verbatim}
+ffmpeg -i output_fast.mkv -ss 00:00:5.000 -f image2 -vframes 1 out.png
+\end{verbatim}
+
+\subsection{Morphing}
+Dwie klatki (zrodlowa i docelowa) ustawiamy w blender z pomoca image as plane. Docelowa minimalnie za zrodlowa.
+Pozniej dodajemy shape key dla obu obrazkow. Nastepnie robimy dla obu subdivide i pozniej modyfikujemy
+wierzcholki za pomoca connected mesh. Pozniej orotognal projection. Oraz modyfikacja alpha materialow obu obrazkow
+Robmy zrodlowy shape key by zmienial sie w docelowy oraz docelowy w zrodlowy. Jak tylko zrodlowy w docelowy to
+bedzie cross fading a nie morphing
+
+\subsection{wybuchy, flary}
+Kulisty obiekt, z teksura cloud, ktora nie renderujemy tylko uzywamy jako
+displace map. Pozniej weight painting zeby ksztalt byl odpowiedni
+nastepnie w materiale: volume na zadany kolor.
+Density na 0 gdy ma nie byc efektu
+
+\subsection{Usuniecie szumu z nagrania dzwiekowego}
+\begin{enumerate}
+\item Wytnij kawalek szumu z nagrania: \textsf{sox nagranie.wav szum.wav trim start duration}
+\item Stworz profil szumu: \textsf{sox szum.wav -n noiseprof noise.prof} 
+\item Usun szum z nagrania: \textsf{sox nagranie.wav nagranie-bez-szumu.wav noisered noise.prof 0.21}
+\end{enumerate}
+
+\subsection{Obrot filmu o 90 stopni}
+\subsubsection{zgodnie ze wskazowkami zegara}
+\begin{verbatim}
+ffmpeg -i in.mov -vf "transpose=1" out.mov
+\end{verbatim}
+\subsubsection{przeciwnie do wskazowek zegara}
+\begin{verbatim}
+ffmpeg -i in.mov -vf "transpose=2" out.mov
+\end{verbatim}
+
+\subsection{Zwiekszenie ilosc klatek na sekunde poparzez duplikacje/wyciecie klatek}
+\begin{verbatim}
+ ffmpeg -i <input_file> -r 29.97 <output_file>
+\end{verbatim}
+
+\subsubsection{Wyciagniecie fragmentu filmu usuwajac audio}
+\begin{verbatim}
+ffmpeg -i output_fast2.mkv -ss 00:00:00 -t 00:00:5.000 -an before.mkv
+\end{verbatim}
+
+\subsection{Informacje}
+\begin{itemize}
+\item Aby na andrroidzie ogladac wyrendorowane z linuxa filmy to format i codec w blenderze ustawilem na mpeg
+\item odtwarzanie mplayerem z zatrzymaniem na ostatniej klatce:
+\begin{verbatim}
+mplayer -idle -fixed-vo <movie file>
+\end{verbatim}
+\end{itemize}
+
+\section{TODO}
+\begin{itemize}
+\item Przetestowac skrypt do robienia mieczy swietlnych za pomoca imagemagic
+\item Efekt wybuchu zrobic by na filmie sie pojawil
+\end{itemize}
+
+\end{document}
+
